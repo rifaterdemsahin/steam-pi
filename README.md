@@ -18,6 +18,30 @@ steam-pi/
 
 ---
 
+## Setup Flow
+
+```mermaid
+flowchart TD
+    A([Start]) --> B{Cable data-capable?}
+    B -- No --> C[Swap to data USB cable]
+    C --> B
+    B -- Yes --> D[Hold BOOTSEL + plug in USB]
+    D --> E{RPI-RP2 volume appears?}
+    E -- No --> F[Try different USB port\nor retry BOOTSEL timing]
+    F --> D
+    E -- Yes --> G[Download Pimoroni\nMicroPython UF2]
+    G --> H[Drag UF2 onto RPI-RP2 volume]
+    H --> I[Pico reboots automatically]
+    I --> J[ls /dev/cu.usb*\nFind serial port]
+    J --> K[screen /dev/cu.usbmodem* 115200\nOpen REPL]
+    K --> L[Install mpremote\npip install mpremote]
+    L --> M[Copy main.py to Pico\nmpremote cp main.py :main.py]
+    M --> N[RGB keys light up\nKeyboard sends HID keypresses]
+    N --> O([Done])
+```
+
+---
+
 ## Hardware
 
 - Raspberry Pi Pico 2 W (RP2350, wireless)
