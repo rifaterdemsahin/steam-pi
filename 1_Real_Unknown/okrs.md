@@ -5,7 +5,7 @@
 |---|---|---|
 | Pico 2 W detected by macOS | USB serial port visible | 🟢 Done — `/dev/cu.usbmodem1401` |
 | MicroPython REPL accessible | `>>>` prompt in screen | 🟢 Done — v1.27.0 flashed via picotool |
-| RGB keys illuminate correctly | All 16 keys light up | 🔴 Pending — picokeypad not yet installed |
+| RGB keys illuminate correctly | All 16 keys light up | 🟢 Done — pure Python picokeypad installed, keys 0/5/10/15 lit |
 
 **Resolved:** New cable + `picotool load` bypassed the macOS volume mount issue.
 See `4_Formula/flash-micropython-pico2w.md` for full steps.
