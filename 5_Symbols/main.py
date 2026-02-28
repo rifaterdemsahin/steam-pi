@@ -11,17 +11,17 @@ Requirements (Pimoroni MicroPython UF2):
 """
 
 import picokeypad as keypad
-import usb_hid
 import time
 
 try:
+    import usb_hid
     from adafruit_hid.keyboard import Keyboard
     from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
     from adafruit_hid.keycode import Keycode
     kbd = Keyboard(usb_hid.devices)
     layout = KeyboardLayoutUS(kbd)
     HID_AVAILABLE = True
-except ImportError:
+except (ImportError, AttributeError):
     HID_AVAILABLE = False
     print("adafruit_hid not found — HID disabled, using print mode")
 
