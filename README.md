@@ -2,6 +2,8 @@
 
 RGB macro keyboard (Stream Deck style) built with a Raspberry Pi Pico 2 W.
 
+🌐 **Live site:** [https://rifaterdemsahin.github.io/steam-pi/](https://rifaterdemsahin.github.io/steam-pi/)
+
 ---
 
 ## Project Structure
