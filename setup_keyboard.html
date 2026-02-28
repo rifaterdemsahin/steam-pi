@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pico RGB Keyboard Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f0f;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+
+    header p {
+      color: #888;
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* ── Keypad grid ── */
+    .keypad-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .keypad-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #555;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 72px);
+      grid-template-rows: repeat(4, 72px);
+      gap: 8px;
+      background: #1a1a1a;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .key {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: transform 0.1s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      background: #222;
+    }
+
+    .key:hover {
+      transform: scale(1.05);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .key.selected {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+    }
+
+    .key .key-index {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .key .key-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .key .key-name {
+      font-size: 0.55rem;
+      text-align: center;
+      padding: 0 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 68px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Editor panel ── */
+    .editor {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 24px;
+      width: 300px;
+      min-width: 260px;
+    }
+
+    .editor h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .editor h2 .badge {
+      background: #2a2a2a;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .field input[type="text"],
+    .field select {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field input[type="text"]:focus,
+    .field select:focus {
+      border-color: #555;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .field input[type="color"] {
+      width: 48px;
+      height: 36px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #111;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .color-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .preset {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.1s, border-color 0.15s;
+    }
+
+    .preset:hover {
+      transform: scale(1.2);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .field input[type="text"].icon-input {
+      font-size: 1.4rem;
+      text-align: center;
+      width: 56px;
+    }
+
+    .icon-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .icon-btn:hover { background: #333; }
+
+    /* ── Action category tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: #888;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tab.active {
+      background: #333;
+      color: #fff;
+      border-color: #555;
+    }
+
+    /* ── Hotkey input ── */
+    .hotkey-box {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .hotkey-box:focus { outline: none; border-color: #555; }
+
+    .hotkey-box .key-chip {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: #ccc;
+    }
+
+    .hotkey-box.listening {
+      border-color: #4a9eff;
+      color: #4a9eff;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: #4a9eff;
+      color: #000;
+    }
+
+    .btn-secondary {
+      background: #2a2a2a;
+      color: #ccc;
+      border: 1px solid #333;
+    }
+
+    .btn:hover { opacity: 0.85; }
+
+    /* ── Export panel ── */
+    .export-panel {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 660px;
+    }
+
+    .export-panel h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .export-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    pre {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      color: #a0c4ff;
+      white-space: pre;
+    }
+
+    .copy-btn {
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #ccc;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #333; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4a9eff;
+      color: #000;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pico 2 W — RGB Keyboard Setup</h1>
+  <p>Click a key to configure its color, label, and action</p>
+</header>
+
+<div class="layout">
+
+  <!-- Keypad -->
+  <div class="keypad-wrap">
+    <div class="keypad-label">Pimoroni RGB Keypad (4×4)</div>
+    <div class="keypad" id="keypad"></div>
+  </div>
+
+  <!-- Editor -->
+  <div class="editor">
+    <h2>Edit Key <span class="badge" id="editor-index">—</span></h2>
+
+    <div class="field">
+      <label>Label</label>
+      <input type="text" id="key-label" placeholder="e.g. Mute Mic" />
+    </div>
+
+    <div class="field">
+      <label>Icon</label>
+      <div class="icon-row">
+        <input type="text" class="icon-input" id="key-icon" placeholder="🎙" maxlength="2" />
+        <span class="icon-btn" data-icon="🎙">🎙</span>
+        <span class="icon-btn" data-icon="🎵">🎵</span>
+        <span class="icon-btn" data-icon="📷">📷</span>
+        <span class="icon-btn" data-icon="🔴">🔴</span>
+        <span class="icon-btn" data-icon="⏸">⏸</span>
+        <span class="icon-btn" data-icon="▶">▶</span>
+        <span class="icon-btn" data-icon="🔇">🔇</span>
+        <span class="icon-btn" data-icon="💡">💡</span>
+        <span class="icon-btn" data-icon="🖥">🖥</span>
+        <span class="icon-btn" data-icon="🔊">🔊</span>
+        <span class="icon-btn" data-icon="⭐">⭐</span>
+        <span class="icon-btn" data-icon="🚀">🚀</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Color</label>
+      <div class="color-row">
+        <input type="color" id="key-color" value="#ff0000" />
+        <div class="color-presets" id="color-presets"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Action type</label>
+      <div class="tabs" id="action-tabs">
+        <div class="tab active" data-type="hotkey">Hotkey</div>
+        <div class="tab" data-type="obs">OBS</div>
+        <div class="tab" data-type="text">Type Text</div>
+        <div class="tab" data-type="none">None</div>
+      </div>
+
+      <div id="action-hotkey">
+        <label style="font-size:0.72rem;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:block">Press keys below, then click the box</label>
+        <div class="hotkey-box" id="hotkey-box" tabindex="0">
+          <span style="color:#555;font-size:0.8rem">Click to record shortcut…</span>
+        </div>
+      </div>
+
+      <div id="action-obs" style="display:none">
+        <select id="obs-action">
+          <option value="">— Select OBS action —</option>
+          <optgroup label="Scenes">
+            <option value="obs:scene:1">Switch to Scene 1</option>
+            <option value="obs:scene:2">Switch to Scene 2</option>
+            <option value="obs:scene:3">Switch to Scene 3</option>
+            <option value="obs:scene:4">Switch to Scene 4</option>
+          </optgroup>
+          <optgroup label="Stream / Record">
+            <option value="obs:stream:toggle">Toggle Stream</option>
+            <option value="obs:record:toggle">Toggle Recording</option>
+            <option value="obs:record:pause">Pause Recording</option>
+          </optgroup>
+          <optgroup label="Audio">
+            <option value="obs:mute:mic">Toggle Mic Mute</option>
+            <option value="obs:mute:desktop">Toggle Desktop Audio</option>
+          </optgroup>
+          <optgroup label="Misc">
+            <option value="obs:screenshot">Screenshot</option>
+            <option value="obs:studio:toggle">Studio Mode</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div id="action-text" style="display:none">
+        <input type="text" id="text-action" placeholder="Text to type when pressed" />
+      </div>
+
+      <div id="action-none" style="display:none">
+        <p style="color:#555;font-size:0.8rem;margin-top:4px">Key is inactive.</p>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="apply-btn">Apply</button>
+      <button class="btn btn-secondary" id="clear-btn">Clear</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Export -->
+<div class="layout" style="margin-top:28px">
+  <div class="export-panel">
+    <h2>
+      Export
+      <button class="copy-btn" id="copy-btn">Copy</button>
+    </h2>
+    <div class="export-tabs">
+      <div class="tab active" data-export="micropython">MicroPython</div>
+      <div class="tab" data-export="json">JSON</div>
+    </div>
+    <pre id="code-output"></pre>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+
+  const PRESETS = [
+    '#ff0000','#ff6600','#ffcc00','#00ff00',
+    '#00ccff','#0044ff','#cc00ff','#ffffff',
+  ];
+
+  const DEFAULT_KEY = () => ({
+    label: '',
+    icon: '',
+    color: '#222222',
+    actionType: 'none',
+    hotkey: [],
+    obsAction: '',
+    textAction: '',
+  });
+
+  const keys = Array.from({ length: 16 }, DEFAULT_KEY);
+  let selected = 0;
+  let exportMode = 'micropython';
+  let hotkeyListening = false;
+  let currentHotkey = [];
+
+  // ── Build keypad ───────────────────────────────────────────────────────────
+
+  const keypad = document.getElementById('keypad');
+
+  function buildKeypad() {
+    keypad.innerHTML = '';
+    keys.forEach((k, i) => {
+      const el = document.createElement('div');
+      el.className = 'key' + (i === selected ? ' selected' : '');
+      el.dataset.index = i;
+      el.style.background = k.color === '#222222' ? '#222' : k.color;
+      el.style.boxShadow = k.color !== '#222222'
+        ? `0 0 12px ${k.color}88`
+        : 'none';
+
+      const isDark = isColorDark(k.color);
+      const textColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.85)';
+
+      el.innerHTML = `
+        <span class="key-index" style="color:${isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)'}">${i}</span>
+        <span class="key-icon">${k.icon || ''}</span>
+        <span class="key-name" style="color:${textColor}">${k.label || ''}</span>
+      `;
+      el.addEventListener('click', () => selectKey(i));
+      keypad.appendChild(el);
+    });
+  }
+
+  function isColorDark(hex) {
+    const c = hex.replace('#', '');
+    if (c.length < 6) return true;
+    const r = parseInt(c.substr(0,2),16);
+    const g = parseInt(c.substr(2,2),16);
+    const b = parseInt(c.substr(4,2),16);
+    return (0.299*r + 0.587*g + 0.114*b) < 140;
+  }
+
+  // ── Editor ─────────────────────────────────────────────────────────────────
+
+  function selectKey(i) {
+    selected = i;
+    const k = keys[i];
+    document.getElementById('editor-index').textContent = `Key ${i}`;
+    document.getElementById('key-label').value = k.label;
+    document.getElementById('key-icon').value = k.icon;
+    document.getElementById('key-color').value = k.color === '#222222' ? '#ff0000' : k.color;
+    setActionType(k.actionType);
+    document.getElementById('obs-action').value = k.obsAction;
+    document.getElementById('text-action').value = k.textAction;
+    currentHotkey = [...k.hotkey];
+    renderHotkeyBox();
+    buildKeypad();
+  }
+
+  function setActionType(type) {
+    document.querySelectorAll('#action-tabs .tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.type === type);
+    });
+    ['hotkey','obs','text','none'].forEach(t => {
+      document.getElementById('action-' + t).style.display = t === type ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('#action-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => setActionType(tab.dataset.type));
+  });
+
+  // Color presets
+  const presetsEl = document.getElementById('color-presets');
+  PRESETS.forEach(hex => {
+    const d = document.createElement('div');
+    d.className = 'preset';
+    d.style.background = hex;
+    d.title = hex;
+    d.addEventListener('click', () => {
+      document.getElementById('key-color').value = hex;
+    });
+    presetsEl.appendChild(d);
+  });
+
+  // Icon buttons
+  document.querySelectorAll('.icon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('key-icon').value = btn.dataset.icon;
+    });
+  });
+
+  // Hotkey recording
+  const hotKeyBox = document.getElementById('hotkey-box');
+
+  hotKeyBox.addEventListener('click', () => {
+    hotkeyListening = true;
+    currentHotkey = [];
+    hotKeyBox.classList.add('listening');
+    hotKeyBox.textContent = 'Press keys…';
+  });
+
+  hotKeyBox.addEventListener('keydown', e => {
+    if (!hotkeyListening) return;
+    e.preventDefault();
+    const key = e.key === ' ' ? 'Space' : e.key;
+    if (!currentHotkey.includes(key)) currentHotkey.push(key);
+    renderHotkeyBox();
+  });
+
+  hotKeyBox.addEventListener('keyup', () => {
+    if (!hotkeyListening) return;
+    hotkeyListening = false;
+    hotKeyBox.classList.remove('listening');
+  });
+
+  function renderHotkeyBox() {
+    if (currentHotkey.length === 0) {
+      hotKeyBox.innerHTML = '<span style="color:#555;font-size:0.8rem">Click to record shortcut…</span>';
+    } else {
+      hotKeyBox.innerHTML = currentHotkey
+        .map(k => `<span class="key-chip">${k}</span>`)
+        .join('');
+    }
+  }
+
+  // Apply / Clear
+  document.getElementById('apply-btn').addEventListener('click', () => {
+    const actionType = document.querySelector('#action-tabs .tab.active').dataset.type;
+    keys[selected] = {
+      label: document.getElementById('key-label').value.trim(),
+      icon: document.getElementById('key-icon').value.trim(),
+      color: document.getElementById('key-color').value,
+      actionType,
+      hotkey: [...currentHotkey],
+      obsAction: document.getElementById('obs-action').value,
+      textAction: document.getElementById('text-action').value.trim(),
+    };
+    buildKeypad();
+    renderExport();
+    showToast('Key updated');
+  });
+
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    keys[selected] = DEFAULT_KEY();
+    selectKey(selected);
+    renderExport();
+  });
+
+  // ── Export ─────────────────────────────────────────────────────────────────
+
+  document.querySelectorAll('.export-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.export-tabs .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      exportMode = tab.dataset.export;
+      renderExport();
+    });
+  });
+
+  function hexToRgb(hex) {
+    const c = hex.replace('#', '');
+    return [
+      parseInt(c.substr(0,2),16),
+      parseInt(c.substr(2,2),16),
+      parseInt(c.substr(4,2),16),
+    ];
+  }
+
+  function hotkeyToPython(hotkey) {
+    const MAP = {
+      'Control': 'Keycode.CONTROL',
+      'Shift': 'Keycode.SHIFT',
+      'Alt': 'Keycode.ALT',
+      'Meta': 'Keycode.GUI',
+      ' ': 'Keycode.SPACE',
+      'Space': 'Keycode.SPACE',
+      'Enter': 'Keycode.ENTER',
+      'Escape': 'Keycode.ESCAPE',
+      'Tab': 'Keycode.TAB',
+      'Backspace': 'Keycode.BACKSPACE',
+      'ArrowUp': 'Keycode.UP_ARROW',
+      'ArrowDown': 'Keycode.DOWN_ARROW',
+      'ArrowLeft': 'Keycode.LEFT_ARROW',
+      'ArrowRight': 'Keycode.RIGHT_ARROW',
+      'F1':'Keycode.F1','F2':'Keycode.F2','F3':'Keycode.F3','F4':'Keycode.F4',
+      'F5':'Keycode.F5','F6':'Keycode.F6','F7':'Keycode.F7','F8':'Keycode.F8',
+      'F9':'Keycode.F9','F10':'Keycode.F10','F11':'Keycode.F11','F12':'Keycode.F12',
+    };
+    return hotkey.map(k => MAP[k] || `Keycode.${k.toUpperCase()}`).join(', ');
+  }
+
+  function renderExport() {
+    const out = document.getElementById('code-output');
+
+    if (exportMode === 'json') {
+      out.textContent = JSON.stringify(
+        keys.map((k, i) => ({ index: i, ...k })),
+        null, 2
+      );
+      return;
+    }
+
+    // MicroPython
+    const lines = [];
+    lines.push('import picokeypad as keypad');
+    lines.push('import usb_hid');
+    lines.push('import time');
+    lines.push('from adafruit_hid.keyboard import Keyboard');
+    lines.push('from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS');
+    lines.push('from adafruit_hid.keycode import Keycode');
+    lines.push('');
+    lines.push('keypad.init()');
+    lines.push('keypad.set_brightness(1.0)');
+    lines.push('kbd = Keyboard(usb_hid.devices)');
+    lines.push('layout = KeyboardLayoutUS(kbd)');
+    lines.push('');
+    lines.push('# ── Key colors ────────────────────────────────');
+
+    keys.forEach((k, i) => {
+      const [r,g,b] = hexToRgb(k.color);
+      const comment = k.label ? `  # ${i}: ${k.label}` : `  # ${i}`;
+      lines.push(`keypad.illuminate(${i}, ${r}, ${g}, ${b})${comment}`);
+    });
+
+    lines.push('keypad.update()');
+    lines.push('');
+    lines.push('# ── Action map ────────────────────────────────');
+    lines.push('def on_press(i):');
+
+    const active = keys.filter(k => k.actionType !== 'none');
+    if (active.length === 0) {
+      lines.push('    pass  # No actions configured');
+    } else {
+      keys.forEach((k, i) => {
+        if (k.actionType === 'none') return;
+        lines.push(`    if i == ${i}:  # ${k.label || 'Key ' + i}`);
+        if (k.actionType === 'hotkey' && k.hotkey.length > 0) {
+          lines.push(`        kbd.send(${hotkeyToPython(k.hotkey)})`);
+        } else if (k.actionType === 'text' && k.textAction) {
+          lines.push(`        layout.write(${JSON.stringify(k.textAction)})`);
+        } else if (k.actionType === 'obs' && k.obsAction) {
+          lines.push(`        print("OBS:${k.obsAction}")`);
+        } else {
+          lines.push(`        pass`);
+        }
+      });
+    }
+
+    lines.push('');
+    lines.push('# ── Main loop ─────────────────────────────────');
+    lines.push('prev = 0');
+    lines.push('while True:');
+    lines.push('    cur = keypad.get_button_states()');
+    lines.push('    if cur != prev:');
+    lines.push('        for i in range(16):');
+    lines.push('            if (cur & (1 << i)) and not (prev & (1 << i)):');
+    lines.push('                on_press(i)');
+    lines.push('        prev = cur');
+    lines.push('    time.sleep(0.02)');
+
+    out.textContent = lines.join('\n');
+  }
+
+  // Copy
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('code-output').textContent);
+    showToast('Copied to clipboard!');
+  });
+
+  // Toast
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // Export tabs in header area
+  document.querySelectorAll('[data-export]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-export]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      exportMode = tab.dataset.export;
+      renderExport();
+    });
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+
+  buildKeypad();
+  selectKey(0);
+  renderExport();
+</script>
+
+</body>
+</html>
