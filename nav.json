@@ -35,6 +35,7 @@
     { "title": "Connect Pico 2W to Mac",    "url": "markdown_renderer.html?file=4_Formula/connect-pico2w-mac.md",             "tags": ["connect","pico","mac","usb","serial"] },
     { "title": "Pico 2W Pin Layout",        "url": "markdown_renderer.html?file=4_Formula/pico2w-keyboard-pins.md",           "tags": ["pins","gpio","pinout","keyboard","matrix"] },
     { "title": "RGB Keyboard Setup Guide",  "url": "markdown_renderer.html?file=4_Formula/setup-pico-rgb-keyboard.md",        "tags": ["rgb","keyboard","setup","micropython","pimoroni"] },
+    { "title": "Flash MicroPython — Pico 2 W", "url": "markdown_renderer.html?file=4_Formula/flash-micropython-pico2w.md", "tags": ["flash","micropython","uf2","picotool","rp2350","firmware"] },
     { "title": "Source Code — main.py",     "url": "markdown_renderer.html?file=5_Symbols/main.py",                          "tags": ["code","python","micropython","source"] },
     { "title": "Connection Issues Log",     "url": "markdown_renderer.html?file=6_Semblance/pico2w-connection-issues.md",     "tags": ["issues","errors","bugs","connection","usb"] },
     { "title": "Testing Checklist",         "url": "markdown_renderer.html?file=7_Testing_Known/testing-checklist.md",        "tags": ["testing","checklist","validation","proof"] }

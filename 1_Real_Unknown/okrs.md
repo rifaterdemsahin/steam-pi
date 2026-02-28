@@ -3,11 +3,12 @@
 ## Objective 1 — Physical Hardware Working
 | Key Result | Target | Status |
 |---|---|---|
-| Pico 2 W detected by macOS | USB serial port visible | 🔴 Blocked |
-| MicroPython REPL accessible | `>>>` prompt in screen | 🔴 Blocked |
-| RGB keys illuminate correctly | All 16 keys light up | 🔴 Pending |
+| Pico 2 W detected by macOS | USB serial port visible | 🟢 Done — `/dev/cu.usbmodem1401` |
+| MicroPython REPL accessible | `>>>` prompt in screen | 🟢 Done — v1.27.0 flashed via picotool |
+| RGB keys illuminate correctly | All 16 keys light up | 🔴 Pending — picokeypad not yet installed |
 
-**Blocker:** USB not detected even in BOOTSEL mode. See `6_Semblance/pico2w-connection-issues.md`.
+**Resolved:** New cable + `picotool load` bypassed the macOS volume mount issue.
+See `4_Formula/flash-micropython-pico2w.md` for full steps.
 
 ## Objective 2 — Keyboard Functionality
 | Key Result | Target | Status |
