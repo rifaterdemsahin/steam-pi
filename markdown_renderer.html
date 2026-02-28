@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Steam-Pi — Docs</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <!-- marked.js for markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <!-- PrismJS for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js" defer></script>
+  <style>
+    .renderer-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+    .renderer-breadcrumb {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .renderer-breadcrumb a { color: var(--text-muted); }
+    .renderer-breadcrumb span { color: var(--text-dim); }
+    .renderer-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .renderer-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .renderer-btn:hover { background: var(--surface2); color: var(--text); }
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .error-box {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      color: #fca5a5;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="nav-container"></div>
+
+<div class="renderer-wrap">
+
+  <div class="renderer-breadcrumb" id="breadcrumb">
+    <a href="index.html">🏠 Home</a>
+    <span>›</span>
+    <span id="breadcrumb-file">Loading…</span>
+  </div>
+
+  <div class="renderer-actions">
+    <button class="renderer-btn" id="btn-copy">📋 Copy raw</button>
+    <button class="renderer-btn" id="btn-back" onclick="history.back()">← Back</button>
+  </div>
+
+  <div id="content" class="md-body">
+    <div class="loading">⏳ Loading document…</div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Steam-Pi ·
+    <a href="https://github.com/rifaterdemsahin/steam-pi" target="_blank">GitHub</a>
+  </p>
+</footer>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get('file');
+    const contentEl = document.getElementById('content');
+    const breadcrumbFile = document.getElementById('breadcrumb-file');
+    let rawText = '';
+
+    if (!file) {
+      contentEl.innerHTML = `<div class="error-box">
+        <strong>No file specified.</strong><br>
+        Use <code>?file=path/to/file.md</code> in the URL.
+      </div>`;
+      return;
+    }
+
+    // Update page title and breadcrumb
+    const filename = file.split('/').pop();
+    document.title = `Steam-Pi — ${filename}`;
+    breadcrumbFile.textContent = filename;
+
+    // Configure marked
+    if (window.marked) {
+      marked.setOptions({ gfm: true, breaks: true });
+    }
+
+    // Fetch the file
+    fetch(file)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}: ${file}`);
+        return r.text();
+      })
+      .then(text => {
+        rawText = text;
+        // If it's a markdown file, render it
+        if (file.match(/\.(md|markdown)$/i)) {
+          contentEl.innerHTML = marked ? marked.parse(text) : `<pre>${text}</pre>`;
+        } else {
+          // Show as code with syntax highlighting
+          const ext = file.split('.').pop();
+          const langMap = { py: 'python', js: 'javascript', sh: 'bash', json: 'json', yaml: 'yaml', yml: 'yaml' };
+          const lang = langMap[ext] || 'text';
+          contentEl.innerHTML = `<pre><code class="language-${lang}">${escapeHtml(text)}</code></pre>`;
+        }
+        // Trigger Prism highlight after render
+        setTimeout(() => { if (window.Prism) Prism.highlightAll(); }, 100);
+      })
+      .catch(err => {
+        contentEl.innerHTML = `<div class="error-box">
+          <strong>Failed to load file</strong><br>
+          <code>${escapeHtml(file)}</code><br><br>
+          ${err.message}
+        </div>`;
+      });
+
+    // Copy raw button
+    document.getElementById('btn-copy').addEventListener('click', () => {
+      if (!rawText) return;
+      navigator.clipboard.writeText(rawText).then(() => {
+        const btn = document.getElementById('btn-copy');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy raw'; }, 2000);
+      });
+    });
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+  })();
+</script>
+
+<script>window.BASE_PATH = './';</script>
+<script src="js/nav.js"></script>
+
+</body>
+</html>

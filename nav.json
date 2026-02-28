@@ -1,0 +1,42 @@
+{
+  "project": "Steam-Pi",
+  "tagline": "Pico 2 W RGB Keyboard as a Steam Deck Controller",
+  "github": "https://github.com/rifaterdemsahin/steam-pi",
+  "linkedin": "https://www.linkedin.com/in/rifaterdemsahin/",
+  "youtube": "https://www.youtube.com/@RifatErdemSahin",
+
+  "debugMenu": [
+    { "label": "1_Real",        "emoji": "🎯", "href": "markdown_renderer.html?file=1_Real_Unknown/README.md" },
+    { "label": "2_Environment", "emoji": "🌍", "href": "markdown_renderer.html?file=2_Environment/README.md" },
+    { "label": "3_Simulation",  "emoji": "🎨", "href": "markdown_renderer.html?file=3_Simulation/README.md" },
+    { "label": "4_Formula",     "emoji": "📋", "href": "markdown_renderer.html?file=4_Formula/README.md" },
+    { "label": "5_Symbols",     "emoji": "💻", "href": "markdown_renderer.html?file=5_Symbols/README.md" },
+    { "label": "6_Semblance",   "emoji": "🐛", "href": "markdown_renderer.html?file=6_Semblance/README.md" },
+    { "label": "7_Testing",     "emoji": "✅", "href": "markdown_renderer.html?file=7_Testing_Known/README.md" }
+  ],
+
+  "contentMenu": [
+    { "label": "Home",           "emoji": "🏠", "href": "index.html" },
+    { "label": "Keyboard Setup", "emoji": "⌨️", "href": "setup_keyboard.html" },
+    { "label": "Pico Setup",     "emoji": "🚀", "href": "4_Formula/index.html" },
+    { "label": "Pin Reference",  "emoji": "📌", "href": "markdown_renderer.html?file=4_Formula/pico2w-keyboard-pins.md" },
+    { "label": "Mac Connect",    "emoji": "🔌", "href": "markdown_renderer.html?file=4_Formula/connect-pico2w-mac.md" },
+    { "label": "Issues Log",     "emoji": "🐛", "href": "6_Semblance/index.html" },
+    { "label": "Source Code",    "emoji": "💾", "href": "5_Symbols/index.html" }
+  ],
+
+  "searchIndex": [
+    { "title": "Home",                      "url": "index.html",                                                              "tags": ["home","steam-pi","overview"] },
+    { "title": "Keyboard Setup UI",         "url": "setup_keyboard.html",                                                     "tags": ["keyboard","rgb","setup","keys","colors"] },
+    { "title": "Problem Definition",        "url": "markdown_renderer.html?file=1_Real_Unknown/README.md",                    "tags": ["problem","okr","goal","why"] },
+    { "title": "Mac Setup Environment",     "url": "markdown_renderer.html?file=2_Environment/setup-mac.md",                  "tags": ["mac","setup","environment","macos"] },
+    { "title": "Constraints",               "url": "markdown_renderer.html?file=2_Environment/constraints.md",                "tags": ["constraints","limitations","requirements"] },
+    { "title": "Simulation / Mockups",      "url": "3_Simulation/index.html",                                                 "tags": ["simulation","mockup","design","carousel"] },
+    { "title": "Connect Pico 2W to Mac",    "url": "markdown_renderer.html?file=4_Formula/connect-pico2w-mac.md",             "tags": ["connect","pico","mac","usb","serial"] },
+    { "title": "Pico 2W Pin Layout",        "url": "markdown_renderer.html?file=4_Formula/pico2w-keyboard-pins.md",           "tags": ["pins","gpio","pinout","keyboard","matrix"] },
+    { "title": "RGB Keyboard Setup Guide",  "url": "markdown_renderer.html?file=4_Formula/setup-pico-rgb-keyboard.md",        "tags": ["rgb","keyboard","setup","micropython","pimoroni"] },
+    { "title": "Source Code — main.py",     "url": "markdown_renderer.html?file=5_Symbols/main.py",                          "tags": ["code","python","micropython","source"] },
+    { "title": "Connection Issues Log",     "url": "markdown_renderer.html?file=6_Semblance/pico2w-connection-issues.md",     "tags": ["issues","errors","bugs","connection","usb"] },
+    { "title": "Testing Checklist",         "url": "markdown_renderer.html?file=7_Testing_Known/testing-checklist.md",        "tags": ["testing","checklist","validation","proof"] }
+  ]
+}

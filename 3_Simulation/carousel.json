@@ -1,0 +1,18 @@
+[
+  {
+    "src": "images/pico2w-board.svg",
+    "caption": "Raspberry Pi Pico 2 W — RP2350 microcontroller with onboard WiFi/BT"
+  },
+  {
+    "src": "images/rgb-keypad-mockup.svg",
+    "caption": "4×4 RGB Keypad — 16 APA102 individually addressable keys"
+  },
+  {
+    "src": "images/keyboard-config-ui.svg",
+    "caption": "Web Config UI — assign colors and actions to each key"
+  },
+  {
+    "src": "images/obs-integration.svg",
+    "caption": "OBS Integration — scene switch, mute, record from the keypad"
+  }
+]

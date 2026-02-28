@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Steam-Pi — 1. Real Unknown</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<div id="nav-container"></div>
+<main class="page-wrap">
+  <div class="page-header">
+    <h1>🎯 1 — Real Unknown</h1>
+    <p>The "Why" — Problem definitions, OKRs, and the core questions driving this build.</p>
+  </div>
+
+  <div class="section-hero">
+    <div class="hero-icon">❓</div>
+    <div>
+      <h2>The Problem</h2>
+      <p>Can a $6 Raspberry Pi Pico 2 W replace a $150 Elgato Stream Deck while adding wireless OBS control and fully customisable RGB keys — all configured from a browser with no code?</p>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <a class="card" href="../markdown_renderer.html?file=1_Real_Unknown/README.md">
+      <div class="card-emoji">📄</div>
+      <h3>Problem Definition & OKRs</h3>
+      <p>Full problem statement, success criteria, and key results tracking.</p>
+      <span class="card-tag badge-blue">OKRs</span>
+    </a>
+    <a class="card" href="../markdown_renderer.html?file=1_Real_Unknown/okrs.md">
+      <div class="card-emoji">🎯</div>
+      <h3>OKR Tracker</h3>
+      <p>Live status of all objectives and key results for this project.</p>
+      <span class="card-tag badge-yellow">Tracking</span>
+    </a>
+  </div>
+
+  <section class="mt-32">
+    <h2 style="color:#fff;font-size:1rem;font-weight:600;margin-bottom:12px">Core Questions</h2>
+    <ul class="checklist">
+      <li><input type="checkbox"> Why does Pico 2 W not show up via USB on macOS with two different cables?</li>
+      <li><input type="checkbox"> Is BOOTSEL mode working correctly on this specific board?</li>
+      <li><input type="checkbox"> Can the Pimoroni RGB keypad base work with the Pico 2 W (RP2350)?</li>
+      <li><input type="checkbox"> What latency does USB HID have vs Bluetooth HID for gaming?</li>
+      <li><input type="checkbox"> Can the Pico 2 W wireless be used for OBS WebSocket control over WiFi?</li>
+    </ul>
+  </section>
+</main>
+<footer class="site-footer">Steam-Pi · <a href="../index.html">Home</a></footer>
+<script>window.BASE_PATH = '../';</script>
+<script src="../js/nav.js"></script>
+</body>
+</html>

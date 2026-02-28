@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Steam-Pi — 5. Symbols</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js" defer></script>
+</head>
+<body>
+<div id="nav-container"></div>
+<main class="page-wrap">
+  <div class="page-header">
+    <h1>💻 5 — Symbols</h1>
+    <p>The "Reality" — Core MicroPython source code for the Pico 2 W keyboard.</p>
+  </div>
+
+  <div class="card-grid">
+    <a class="card" href="../markdown_renderer.html?file=5_Symbols/main.py">
+      <div class="card-emoji">🐍</div>
+      <h3>main.py</h3>
+      <p>MicroPython entry point — RGB illumination, USB HID hotkeys, OBS serial commands.</p>
+      <span class="card-tag badge-blue">MicroPython</span>
+    </a>
+    <a class="card" href="../setup_keyboard.html">
+      <div class="card-emoji">⌨️</div>
+      <h3>Keyboard Config UI</h3>
+      <p>Visual web editor — configure keys and export MicroPython config.</p>
+      <span class="card-tag badge-green">Tool</span>
+    </a>
+  </div>
+
+  <section class="mt-32">
+    <h2 style="color:#fff;font-size:1rem;font-weight:600;margin-bottom:16px">Deploy to Pico 2 W</h2>
+    <pre><code class="language-bash"># Install mpremote
+pip3 install mpremote
+
+# Find serial port
+ls /dev/cu.usb*
+
+# Transfer main.py
+mpremote connect /dev/cu.usbmodem* cp main.py :main.py
+
+# Verify files on Pico
+mpremote connect /dev/cu.usbmodem* ls
+
+# Open REPL to monitor output
+mpremote connect /dev/cu.usbmodem* repl</code></pre>
+  </section>
+</main>
+<footer class="site-footer">Steam-Pi · <a href="../index.html">Home</a></footer>
+<script>window.BASE_PATH = '../';</script>
+<script src="../js/nav.js"></script>
+</body>
+</html>

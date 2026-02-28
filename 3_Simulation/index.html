@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Steam-Pi — 3. Simulation</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<div id="nav-container"></div>
+<main class="page-wrap">
+  <div class="page-header">
+    <h1>🎨 3 — Simulation</h1>
+    <p>The "Vision" — UI mockups and carousel showing the target state.</p>
+  </div>
+
+  <!-- Carousel -->
+  <div class="carousel-wrap" id="carousel-wrap">
+    <div class="carousel-track" id="carousel-track">
+      <!-- slides injected by JS -->
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prev-btn">← Prev</button>
+      <div class="carousel-dots" id="carousel-dots"></div>
+      <button class="carousel-btn" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <div class="card-grid mt-24">
+    <a class="card" href="../markdown_renderer.html?file=3_Simulation/README.md">
+      <div class="card-emoji">📋</div>
+      <h3>Simulation Notes</h3>
+      <p>How to add images to the carousel and document the vision.</p>
+    </a>
+    <a class="card" href="../setup_keyboard.html">
+      <div class="card-emoji">⌨️</div>
+      <h3>Interactive Key Config</h3>
+      <p>Live mockup of the keyboard configuration UI — try it now.</p>
+    </a>
+  </div>
+</main>
+<footer class="site-footer">Steam-Pi · <a href="../index.html">Home</a></footer>
+
+<script>
+  // Load carousel from carousel.json
+  fetch('carousel.json')
+    .then(r => r.json())
+    .then(slides => {
+      const track  = document.getElementById('carousel-track');
+      const dots   = document.getElementById('carousel-dots');
+      let current  = 0;
+
+      slides.forEach((slide, i) => {
+        // Slide
+        const el = document.createElement('div');
+        el.className = 'carousel-slide';
+        // Use SVG placeholder if image not found
+        el.innerHTML = `
+          <div style="width:100%;max-width:600px;background:var(--surface2);border-radius:10px;
+               padding:40px;text-align:center;border:1px solid var(--border)">
+            <div style="font-size:4rem;margin-bottom:16px">${getEmoji(i)}</div>
+            <div style="font-size:1rem;font-weight:600;color:#fff">${slide.caption}</div>
+          </div>
+        `;
+        // If a real image path is provided, try to show it
+        if (slide.src && !slide.src.endsWith('.svg')) {
+          const img = document.createElement('img');
+          img.src = '../3_Simulation/' + slide.src;
+          img.alt = slide.caption;
+          img.style.maxWidth = '100%';
+          img.style.borderRadius = '10px';
+          img.onload = () => { el.innerHTML = ''; el.appendChild(img); const cap = document.createElement('div'); cap.className = 'slide-caption'; cap.textContent = slide.caption; el.appendChild(cap); };
+        }
+        track.appendChild(el);
+
+        // Dot
+        const dot = document.createElement('div');
+        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dots.appendChild(dot);
+      });
+
+      function goTo(idx) {
+        current = (idx + slides.length) % slides.length;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+
+      document.getElementById('prev-btn').addEventListener('click', () => goTo(current - 1));
+      document.getElementById('next-btn').addEventListener('click', () => goTo(current + 1));
+
+      // Auto-advance every 5 seconds
+      setInterval(() => goTo(current + 1), 5000);
+    })
+    .catch(() => {
+      document.getElementById('carousel-wrap').innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-dim)">No carousel images yet. Add images to 3_Simulation/images/ and update carousel.json.</p>';
+    });
+
+  function getEmoji(i) {
+    return ['🎮','⌨️','🌈','📡'][i % 4];
+  }
+</script>
+
+<script>window.BASE_PATH = '../';</script>
+<script src="../js/nav.js"></script>
+</body>
+</html>
